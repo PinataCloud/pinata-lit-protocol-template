@@ -16,6 +16,7 @@ export default function Home() {
 
   const uploadFile = async (fileToUpload) => {
     try {
+      setUploading(true);
       // Instead of just sending the file to our /api/files endoint we're going to encrypt it first
       // Start by creating a new LitNodeClient
       const litNodeClient = new LitJsSdk.LitNodeClient({
@@ -58,7 +59,6 @@ export default function Home() {
       // Finally we upload the file by passing it to our /api/files endpoint
       // Keep in mind this works for smaller files and you may need to do a presigned JWT and upload from the client if you're dealing with larger files
       // Read more about that here: https://www.pinata.cloud/blog/how-to-upload-to-ipfs-from-the-frontend-with-signed-jwts
-      setUploading(true);
       const formData = new FormData();
       formData.append("file", encryptedFile, encryptedFile.name)
       const res = await fetch("/api/files", {
