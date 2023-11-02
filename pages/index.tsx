@@ -54,7 +54,7 @@ export default function Home() {
 
       // Then we turn it into a file that will be accepted by the Pinata API
       const encryptedBlob = new Blob([encryptedZip], { type: 'text/plain' })
-      const encryptedFile = new File([encryptedBlob], "secretmessage")
+      const encryptedFile = new File([encryptedBlob], fileToUpload.name)
 
       // Finally we upload the file by passing it to our /api/files endpoint
       // Keep in mind this works for smaller files and you may need to do a presigned JWT and upload from the client if you're dealing with larger files
@@ -79,7 +79,7 @@ export default function Home() {
   const decryptFile = async (fileToDecrypt) => {
     try {
       // First we fetch the file from IPFS using the CID and our Gateway URL, then turn it into a blob
-      const fileRes = await fetch(`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${fileToDecrypt}?filename=encrypted.zip`)
+      const fileRes = await fetch(`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${fileToDecrypt}`)
       const file = await fileRes.blob()
       // We recreated the litNodeClient and the authSig
       const litNodeClient = new LitJsSdk.LitNodeClient({
@@ -100,7 +100,7 @@ export default function Home() {
       const blob = new Blob([decryptedFile], { type: 'application/octet-stream' });
       const downloadLink = document.createElement('a');
       downloadLink.href = URL.createObjectURL(blob);
-      downloadLink.download = 'filename.png';  // Set desired filename and extension
+      downloadLink.download = metadata.name;  // Set desired filename and extension
       downloadLink.click();
 
     } catch (error) {
